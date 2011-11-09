@@ -1,63 +1,75 @@
 (function() {
 
-function Paintbrush(canvas) {
-    var context = canvas[0].getContext('2d'),
-        started = false;
+function Paintbrush(paper) {
+    var path,
+        canvas = $(paper.canvas);
 
     this.click = function() {};
 
     this.mousedown = function(e) {
-        beginDraw([e.offsetX, e.offsetY]);
+        beginDraw([e.offsetX-0.5, e.offsetY-0.5]);
     };
 
     this.mouseup = function(e) {
-        stopDraw();
+        stopDraw([e.offsetX-0.5, e.offsetY-0.5]);
     };
 
     this.mousemove = function(e) {
-        addPoint([e.offsetX, e.offsetY]);
+        addPoint([e.offsetX-0.5, e.offsetY-0.5]);
     };
 
     function beginDraw(point) {
-        context.beginPath();
-        context.moveTo(point[0], point[1]);
-        started = true;
-        canvas.trigger('drawing.begin');
+        path = paper.path('M' + point[0] + ' ' + point[1]);
+        canvas.trigger('drawing.begin', { element: path });
     }
 
-    function stopDraw() {
-        started = false;
-        canvas.trigger('drawing.end');
+    function stopDraw(point) {
+        if (! path) return;
+
+        path.attr({ 
+            path: path.attr('path') + "Z"
+        });
+        
+        canvas.trigger('drawing.end', { element: path });
+        path = null;
     }
 
     function addPoint(point) {
-        if (! started) return;
-        context.lineTo(point[0], point[1]);
-        context.stroke();
-        canvas.trigger('drawing.change');
+        if (! path) return;
+
+        var diff = " " + point[0] + " " + point[1]
+        path.attr({ 
+            path: path.attr('path') + diff
+        });
+        canvas.trigger('drawing.change', { 
+            element: path, 
+            type: 'path',
+        });
     }
 }
 
 $.fn.drawing = function() {
-    var tools = {
-        'paintbrush': new Paintbrush(this)
-    };
+    var paper = Raphael(this[0], 500, 500),
+        canvas = $(paper.canvas),
+        tools = {
+            'paintbrush': new Paintbrush(paper)
+        };
 
     var tool = 'paintbrush';
 
-    this.mousedown(function(e) {
+    canvas.mousedown(function(e) {
         tools[tool].mousedown(e);
     });
     
-    this.mouseup(function(e) {
+    canvas.mouseup(function(e) {
         tools[tool].mouseup(e);
     });
     
-    this.mousemove(function(e) {
+    canvas.mousemove(function(e) {
         tools[tool].mousemove(e);
     });
 
-    this.bind('drawing.change', function(e){
+    canvas.bind('drawing.change', function(e){
     });
 
     return this;
