@@ -18,6 +18,14 @@ function Paintbrush(paper) {
         addPoint([e.offsetX-0.5, e.offsetY-0.5]);
     };
 
+    this.createObject = function(data) {
+        return paper.path(data);
+    };
+
+    this.alterObject = function(object, data) {
+        object.attr('path', data);
+    };
+
     function beginDraw(point) {
         path = paper.path('M' + point[0] + ' ' + point[1]);
         canvas.trigger('drawing.begin', { element: path });
@@ -27,7 +35,7 @@ function Paintbrush(paper) {
         if (! path) return;
 
         path.attr({ 
-            path: path.attr('path') + "Z"
+            path: path.attr('path')
         });
         
         canvas.trigger('drawing.end', { element: path });
@@ -53,7 +61,9 @@ $.fn.drawing = function() {
         canvas = $(paper.canvas),
         tools = {
             'paintbrush': new Paintbrush(paper)
-        };
+        },
+        objectFromId = {},
+        objects = [];
 
     var tool = 'paintbrush';
 
@@ -69,8 +79,31 @@ $.fn.drawing = function() {
         tools[tool].mousemove(e);
     });
 
+    canvas.bind('drawing.begin', function(e,f) {
+        $(f.element.node).data('tool', tool);
+    });
+
     canvas.bind('drawing.change', function(e){
     });
+
+    canvas.bind('drawing.end', function(e,f){
+        objects.push(f.element);
+    });
+
+    var api = {};
+
+    api.createObject = function(spec) {
+        var object = tools[spec.tool].createObject(spec.data);
+        object.node.id = spec.id;
+        objectFromId[spec.id] = object;
+    };
+
+    api.updateObject = function(spec) {
+        var object = objectFromId[spec.id];
+        tools[spec.tool].alterObject(object, spec.data);
+    };
+
+    this.data('drawing', api);
 
     return this;
 };
