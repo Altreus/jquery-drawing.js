@@ -6,11 +6,16 @@
         <script type="text/javascript" src="raphael-min.js"></script>
         <script type="text/javascript" src="jquery-drawing.js"></script>
         <script type="text/javascript">
-            $( function() { $('#canvas').drawing(); } );
+            $(function() { 
+                $('#canvas').drawing({
+                    controls: $('#controls')
+                }); 
+            });
         </script>
     </head>
 
     <body>
         <div id="canvas"></div>
+        <div id="controls"></div>
     </body>
 </html>

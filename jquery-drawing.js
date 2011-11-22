@@ -1,71 +1,18 @@
-(function() {
+(function($) {
 
-function Paintbrush(paper) {
-    var path,
-        canvas = $(paper.canvas);
-
-    this.click = function() {};
-
-    this.mousedown = function(e) {
-        beginDraw([e.offsetX-0.5, e.offsetY-0.5]);
-    };
-
-    this.mouseup = function(e) {
-        stopDraw([e.offsetX-0.5, e.offsetY-0.5]);
-    };
-
-    this.mousemove = function(e) {
-        addPoint([e.offsetX-0.5, e.offsetY-0.5]);
-    };
-
-    this.createObject = function(data) {
-        return paper.path(data);
-    };
-
-    this.alterObject = function(object, data) {
-        object.attr('path', data);
-    };
-
-    function beginDraw(point) {
-        path = paper.path('M' + point[0] + ' ' + point[1]);
-        canvas.trigger('drawing.begin', { element: path });
-    }
-
-    function stopDraw(point) {
-        if (! path) return;
-
-        path.attr({ 
-            path: path.attr('path')
-        });
-        
-        canvas.trigger('drawing.end', { element: path });
-        path = null;
-    }
-
-    function addPoint(point) {
-        if (! path) return;
-
-        var diff = " " + point[0] + " " + point[1]
-        path.attr({ 
-            path: path.attr('path') + diff
-        });
-        canvas.trigger('drawing.change', { 
-            element: path, 
-            type: 'path',
-        });
-    }
-}
-
-$.fn.drawing = function() {
+$.fn.drawing = function(options) {
     var paper = Raphael(this[0], 500, 500),
         canvas = $(paper.canvas),
-        tools = {
-            'paintbrush': new Paintbrush(paper)
-        },
+        tools = {},
         objectFromId = {},
         objects = [];
 
-    var tool = 'paintbrush';
+    var tool;
+
+    $.each(Drawing, function(toolName, constructor) {
+        tool = tool || toolName;
+        tools[toolName] = constructor(paper);
+    });
 
     canvas.mousedown(function(e) {
         tools[tool].mousedown(e);
@@ -103,9 +50,26 @@ $.fn.drawing = function() {
         tools[spec.tool].alterObject(object, spec.data);
     };
 
+    api.setTool = function(t) {
+        if (tools[t])
+            tool = t;
+    };
+
     this.data('drawing', api);
+
+    if (options.controls) {
+        $.each(tools, function(name, object) {
+            $('<button>')
+                .addClass('control')
+                .addClass(name)
+                .click(function() {
+                    api.setTool(name);
+                })
+                .appendTo(options.controls);
+        });
+    }
 
     return this;
 };
 
-})();
+})(jQuery);
