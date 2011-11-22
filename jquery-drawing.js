@@ -11,7 +11,7 @@ $.fn.drawing = function(options) {
 
     $.each(Drawing, function(toolName, constructor) {
         tool = tool || toolName;
-        tools[toolName] = constructor(paper);
+        tools[toolName] = new constructor(paper);
     });
 
     canvas.mousedown(function(e) {
@@ -58,15 +58,40 @@ $.fn.drawing = function(options) {
     this.data('drawing', api);
 
     if (options.controls) {
+        var buttons = $('<div>');
+        var settings = $('<div>');
+
+        function populateSettings(config) {
+            $.each(config, function(name, obj) {
+                var input = $('<input/>');
+                input.attr('type', obj.type);
+                input.val(obj.value);
+
+                if (obj.range) {
+                    input.attr('min', obj.range[0]);
+                    input.attr('max', obj.range[1]);
+                }
+
+                input.change(function() {  
+                    tools[tool].set(name, $(this).val());
+                });
+
+                settings.append(input);
+            });
+        }
+
         $.each(tools, function(name, object) {
             $('<button>')
                 .addClass('control')
                 .addClass(name)
                 .click(function() {
                     api.setTool(name);
+                    populateSettings(object.settings());
                 })
-                .appendTo(options.controls);
+                .appendTo(buttons);
         });
+        options.controls.append(buttons).append(settings);
+
     }
 
     return this;
