@@ -82,24 +82,30 @@ $.fn.drawing = function(options) {
     };
 
     $.each(Drawing, function(toolName, constructor) {
-        tool = tool || toolName;
         tools[toolName] = new constructor(paper);
     });
 
     canvas.mousedown(function(e) {
-        tools[tool].mousedown(e);
+        if (!tool) return;
+        if (tools[tool].mousedown)
+            tools[tool].mousedown(e);
     });
     
     canvas.mouseup(function(e) {
-        tools[tool].mouseup(e);
+        if (!tool) return;
+        if (tools[tool].mouseup)
+            tools[tool].mouseup(e);
     });
     
     canvas.mousemove(function(e) {
-        tools[tool].mousemove(e);
+        if (!tool) return;
+        if (tools[tool].mousemove)
+            tools[tool].mousemove(e);
     });
 
     canvas.bind('drawing.begin', function(e,f) {
-        $(f.element.node).data('tool', tool);
+        // Raphael creates an ID for each thing, so set the DOM ID to that.
+        $(f.element.node).data('tool', tool).attr('id', f.element.id);
     });
 
     canvas.bind('drawing.change', function(e){
