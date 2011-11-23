@@ -10,20 +10,76 @@ $.fn.drawing = function(options) {
     var tool;
 
     // Event handlers for the Raphael elements' events
-    var drag = {
-        onmove: function(dx, dy, x, y, e) {
+    var elementEvents = {
+        drag: function(dx, dy, x, y, e) {
             if (!tool) return;
             if (tool.objDrag) tool.objDrag(this, dx, dy, x, y, e);
         },
-        onstart: function(x, y, e) {
+        dragStart: function(x, y, e) {
             if (!tool) return;
             if (tool.objDragStart) tool.objDragStart(this, x, y, e);
         },
-        onend: function(e) {
+        dragStop: function(e) {
             if (!tool) return;
             if (tool.objDragStop) tool.objDragStop(this, e);
         },
-    }
+        dragOver: function(over, e) {
+            if (!tool) return;
+            if (tool.objDragOver) tool.objDragOver(this, over, e);
+        },
+        click: function(e) {
+            if (!tool) return;
+            if (tool.objClick) tool.objClick(this, e);
+        },
+        dblclick: function(e) {
+            if (!tool) return;
+            if (tool.objDblClick) tool.objDblClick(this, e);
+        },
+        hoverIn: function(e) {
+            if (!tool) return;
+            if (tool.objHoverIn) tool.objHoverIn(this, e);
+        },
+        hoverOut: function(e) {
+            if (!tool) return;
+            if (tool.objHoverOut) tool.objHoverOut(this, e);
+        },
+        mouseDown: function(e) {
+            if (!tool) return;
+            if (tool.objMouseDown) tool.objMouseDown(this, e);
+        },
+        mouseUp: function(e) {
+            if (!tool) return;
+            if (tool.objMouseUp) tool.objMouseUp(this, e);
+        },
+        mouseOver: function(e) {
+            if (!tool) return;
+            if (tool.objMouseOver) tool.objMouseOver(this, e);
+        },
+        mouseOut: function(e) {
+            if (!tool) return;
+            if (tool.objMouseOut) tool.objMouseOut(this, e);
+        },
+        mouseMove: function(e) {
+            if (!tool) return;
+            if (tool.objMouseMove) tool.objMouseMove(this, e);
+        },
+        touchStart: function(e) {
+            if (!tool) return;
+            if (tool.objTouchStart) tool.objTouchStart(this, e);
+        },
+        touchEnd: function(e) {
+            if (!tool) return;
+            if (tool.objTouchEnd) tool.objTouchEnd(this, e);
+        },
+        touchMove: function(e) {
+            if (!tool) return;
+            if (tool.objTouchMove) tool.objTouchMove(this, e);
+        },
+        touchCancel: function(e) {
+            if (!tool) return;
+            if (tool.objTouchCancel) tool.objTouchCancel(this, e);
+        },
+    };
 
     $.each(Drawing, function(toolName, constructor) {
         tool = tool || toolName;
@@ -51,7 +107,22 @@ $.fn.drawing = function(options) {
 
     canvas.bind('drawing.end', function(e,f){
         objects.push(f.element);
-        f.element.drag(drag.onmove, drag.onstart, drag.onend);
+        f.element.drag(elementEvents.drag, elementEvents.dragStart,
+            elementEvents.dragStop);
+        f.element.click(elementEvents.click);
+        f.element.dblclick(elementEvents.dblclick);
+        f.element.hover(elementEvents.hoverIn, elementEvents.hoverOut);
+
+        f.element.mousedown(elementEvents.mouseDown);
+        f.element.mouseup(elementEvents.mouseUp);
+        f.element.mouseover(elementEvents.mouseOver);
+        f.element.mouseout(elementEvents.mouseOut);
+        f.element.mousemove(elementEvents.mouseMove);
+
+        f.element.touchstart(elementEvents.touchStart);
+        f.element.touchend(elementEvents.touchEnd);
+        f.element.touchmove(elementEvents.touchMove);
+        f.element.touchcancel(elementEvents.touchCancel);
     });
 
     var api = {};
