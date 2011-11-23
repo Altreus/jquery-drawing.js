@@ -9,6 +9,22 @@ $.fn.drawing = function(options) {
 
     var tool;
 
+    // Event handlers for the Raphael elements' events
+    var drag = {
+        onmove: function(dx, dy, x, y, e) {
+            if (!tool) return;
+            if (tool.objDrag) tool.objDrag(this, dx, dy, x, y, e);
+        },
+        onstart: function(x, y, e) {
+            if (!tool) return;
+            if (tool.objDragStart) tool.objDragStart(this, x, y, e);
+        },
+        onend: function(e) {
+            if (!tool) return;
+            if (tool.objDragStop) tool.objDragStop(this, e);
+        },
+    }
+
     $.each(Drawing, function(toolName, constructor) {
         tool = tool || toolName;
         tools[toolName] = new constructor(paper);
@@ -35,6 +51,7 @@ $.fn.drawing = function(options) {
 
     canvas.bind('drawing.end', function(e,f){
         objects.push(f.element);
+        f.element.drag(drag.onmove, drag.onstart, drag.onend);
     });
 
     var api = {};
