@@ -13,71 +13,71 @@ $.fn.drawing = function(options) {
     var elementEvents = {
         drag: function(dx, dy, x, y, e) {
             if (!tool) return;
-            if (tool.objDrag) tool.objDrag(this, dx, dy, x, y, e);
+            if (tools[tool].objDrag) tools[tool].objDrag(this, dx, dy, x, y, e);
         },
         dragStart: function(x, y, e) {
             if (!tool) return;
-            if (tool.objDragStart) tool.objDragStart(this, x, y, e);
+            if (tools[tool].objDragStart) tools[tool].objDragStart(this, x, y, e);
         },
         dragStop: function(e) {
             if (!tool) return;
-            if (tool.objDragStop) tool.objDragStop(this, e);
+            if (tools[tool].objDragStop) tools[tool].objDragStop(this, e);
         },
         dragOver: function(over, e) {
             if (!tool) return;
-            if (tool.objDragOver) tool.objDragOver(this, over, e);
+            if (tools[tool].objDragOver) tools[tool].objDragOver(this, over, e);
         },
         click: function(e) {
             if (!tool) return;
-            if (tool.objClick) tool.objClick(this, e);
+            if (tools[tool].objClick) tools[tool].objClick(this, e);
         },
         dblclick: function(e) {
             if (!tool) return;
-            if (tool.objDblClick) tool.objDblClick(this, e);
+            if (tools[tool].objDblClick) tools[tool].objDblClick(this, e);
         },
         hoverIn: function(e) {
             if (!tool) return;
-            if (tool.objHoverIn) tool.objHoverIn(this, e);
+            if (tools[tool].objHoverIn) tools[tool].objHoverIn(this, e);
         },
         hoverOut: function(e) {
             if (!tool) return;
-            if (tool.objHoverOut) tool.objHoverOut(this, e);
+            if (tools[tool].objHoverOut) tools[tool].objHoverOut(this, e);
         },
         mouseDown: function(e) {
             if (!tool) return;
-            if (tool.objMouseDown) tool.objMouseDown(this, e);
+            if (tools[tool].objMouseDown) tools[tool].objMouseDown(this, e);
         },
         mouseUp: function(e) {
             if (!tool) return;
-            if (tool.objMouseUp) tool.objMouseUp(this, e);
+            if (tools[tool].objMouseUp) tools[tool].objMouseUp(this, e);
         },
         mouseOver: function(e) {
             if (!tool) return;
-            if (tool.objMouseOver) tool.objMouseOver(this, e);
+            if (tools[tool].objMouseOver) tools[tool].objMouseOver(this, e);
         },
         mouseOut: function(e) {
             if (!tool) return;
-            if (tool.objMouseOut) tool.objMouseOut(this, e);
+            if (tools[tool].objMouseOut) tools[tool].objMouseOut(this, e);
         },
         mouseMove: function(e) {
             if (!tool) return;
-            if (tool.objMouseMove) tool.objMouseMove(this, e);
+            if (tools[tool].objMouseMove) tools[tool].objMouseMove(this, e);
         },
         touchStart: function(e) {
             if (!tool) return;
-            if (tool.objTouchStart) tool.objTouchStart(this, e);
+            if (tools[tool].objTouchStart) tools[tool].objTouchStart(this, e);
         },
         touchEnd: function(e) {
             if (!tool) return;
-            if (tool.objTouchEnd) tool.objTouchEnd(this, e);
+            if (tools[tool].objTouchEnd) tools[tool].objTouchEnd(this, e);
         },
         touchMove: function(e) {
             if (!tool) return;
-            if (tool.objTouchMove) tool.objTouchMove(this, e);
+            if (tools[tool].objTouchMove) tools[tool].objTouchMove(this, e);
         },
         touchCancel: function(e) {
             if (!tool) return;
-            if (tool.objTouchCancel) tool.objTouchCancel(this, e);
+            if (tools[tool].objTouchCancel) tools[tool].objTouchCancel(this, e);
         },
     };
 

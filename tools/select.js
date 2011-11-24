@@ -3,37 +3,29 @@ var Drawing = Drawing || {};
 Drawing.Select = function(paper) {
     var canvas = $(paper.canvas),
         boundingBox = paper.rect(0,0,1,1),
-        selectedElement,
-        _x, _y;
+        selectedElement;
 
     boundingBox.hide();
-
-    this.mousedown = function(e) {
-        if (e.srcElement == paper || e.srcElement == boundingBox) {
-            deselect();
-        }
-        else {
-            selectedElement = e.srcElement;
-            startDrag(e.offsetX, e.offsetY);
-        }
-    };
-
-    this.mouseup = function(e) {
-        endDrag();
-    };
-
-    this.mousemove = function(e) {
-        move(e.offsetX, e.offsetY);
-    };
 
     this.settings = function() {
         return {};
     };
 
+    this.objClick = function() {
+    };
+
     // Start drag + end drag with no move = select
-    function startDrag(x, y) {
-        _x = x;
-        _y = y;
+    this.objDrag = function(obj, dx, dy) {
+        console.log(dx + "," + dy);
+        obj.transform('t' + (dx) + ',' + (dy));
+    }
+
+    function endDrag() {
+    }
+
+    function select(e) {
+        selectedElement = e;
+
         boundingBox.attr({
             x: selectedElement.attr('x'),
             y: selectedElement.attr('y'),
@@ -42,13 +34,6 @@ Drawing.Select = function(paper) {
         });
 
         boundingBox.show();
-    }
-
-    function move(x,y) {
-        selectedElement.transform('T' + (x - _x) + ',' + (y - _y));
-    }
-
-    function endDrag() {
     }
 
     function deselect() {
