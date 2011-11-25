@@ -3,35 +3,52 @@ var Drawing = Drawing || {};
 Drawing.Select = function(paper) {
     var canvas = $(paper.canvas),
         boundingBox = paper.rect(0,0,1,1),
-        selectedElement;
+        selectedElement,
+        tx;
 
     boundingBox.hide();
+    boundingBox.attr({
+        'stroke': '#8CCAEC',
+        'stroke-dasharray': '-'
+    });
 
     this.settings = function() {
         return {};
     };
 
-    this.objClick = function() {
+    this.objClick = function(e) {
+        select(e);
     };
 
-    // Start drag + end drag with no move = select
     this.objDrag = function(obj, dx, dy) {
-        console.log(dx + "," + dy);
-        obj.transform('t' + (dx) + ',' + (dy));
-    }
+        obj.transform('t' + (tx[1] + dx) + ',' + (tx[2] + dy));
+        select(obj);
+    };
 
-    function endDrag() {
-    }
+    this.objDragStop = function(e) {
+        tx = null;
+    };
+
+    this.objDragStart = function(obj) {
+        tx = obj.transform();
+        if (! tx.length) {
+            tx = [null, 0, 0];
+        }
+        else {
+            tx = tx[0];
+        }
+    };
+
+    this.click = function(e) {
+        if (e.srcElement != selectedElement.node) {
+            deselect();
+        }
+    };
 
     function select(e) {
         selectedElement = e;
 
-        boundingBox.attr({
-            x: selectedElement.attr('x'),
-            y: selectedElement.attr('y'),
-            width: selectedElement.attr('width'),
-            height: selectedElement.attr('height')
-        });
+        boundingBox.attr(e.getBBox());
 
         boundingBox.show();
     }

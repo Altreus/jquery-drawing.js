@@ -103,6 +103,12 @@ $.fn.drawing = function(options) {
             tools[tool].mousemove(e);
     });
 
+    canvas.click(function(e) {
+        if (!tool) return;
+        if (tools[tool].click)
+            tools[tool].click(e);
+    });
+
     canvas.bind('drawing.begin', function(e,f) {
         // Raphael creates an ID for each thing, so set the DOM ID to that.
         $(f.element.node).data('tool', tool).attr('id', f.element.id);
@@ -156,6 +162,7 @@ $.fn.drawing = function(options) {
         var settings = $('<div>');
 
         function populateSettings(config) {
+            settings.empty();
             $.each(config, function(name, obj) {
                 var input = $('<input/>');
                 input.attr('type', obj.type);
