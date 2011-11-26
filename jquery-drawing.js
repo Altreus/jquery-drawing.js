@@ -1,7 +1,11 @@
 (function($) {
 
 $.fn.drawing = function(options) {
-    var paper = Raphael(this[0], 500, 500),
+    options = $.extend({
+            size: [500,500]
+        }, options);
+
+    var paper = Raphael(this[0], options.size[0], options.size[1]),
         canvas = $(paper.canvas),
         tools = {},
         objectFromId = {},
