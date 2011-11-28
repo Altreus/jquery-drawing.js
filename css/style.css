@@ -25,3 +25,7 @@ button.control.Paintbrush {
 button.control.Select {
     background: url('../images/cursor.png') no-repeat;
 }
+
+button.control.Sprite {
+    background: url('../images/user_suit.png') no-repeat;
+}
