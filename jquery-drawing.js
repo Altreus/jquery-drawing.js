@@ -192,6 +192,9 @@ $.fn.drawing = function(options) {
                 .click(function() {
                     api.setTool(name);
                     populateSettings(object.settings());
+                    canvas.trigger('drawing.toolchange', {
+                        tool: tools[name]
+                    });
                 })
                 .appendTo(buttons);
         });
