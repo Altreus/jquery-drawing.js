@@ -106,6 +106,12 @@ $.fn.drawing = function(options) {
         if (tools[tool].mousemove)
             tools[tool].mousemove(e);
     });
+    
+    canvas.mouseleave(function(e) {
+        if (!tool) return;
+        if (tools[tool].mouseleave)
+            tools[tool].mouseleave(e);
+    });
 
     canvas.click(function(e) {
         if (!tool) return;
