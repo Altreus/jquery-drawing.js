@@ -18,15 +18,16 @@ Drawing.Paintbrush = function(paper) {
     this.click = function() {};
 
     this.mousedown = function(e) {
-        beginDraw([e.offsetX-0.5, e.offsetY-0.5]);
+        console.log(e);
+        beginDraw([e.layerX-0.5, e.layerY-0.5]);
     };
 
     this.mouseup = function(e) {
-        stopDraw([e.offsetX-0.5, e.offsetY-0.5]);
+        stopDraw([e.layerX-0.5, e.layerY-0.5]);
     };
 
     this.mousemove = function(e) {
-        addPoint([e.offsetX-0.5, e.offsetY-0.5]);
+        addPoint([e.layerX-0.5, e.layerY-0.5]);
     };
 
     this.createObject = function(data) {

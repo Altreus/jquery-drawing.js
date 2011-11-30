@@ -29,8 +29,8 @@ Drawing.Sprite = function(paper) {
         if (!img) return;
 
         img.attr({
-            x: e.offsetX - 0.5 - (settings.width.value / 2),
-            y: e.offsetY - 0.5 - (settings.width.value / 2)
+            x: e.layerX - 0.5 - (settings.width.value / 2),
+            y: e.layerY - 0.5 - (settings.width.value / 2)
         });
     };
 
