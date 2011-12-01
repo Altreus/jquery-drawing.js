@@ -21,8 +21,15 @@ Drawing.Select = function(paper) {
     };
 
     this.objDrag = function(obj, dx, dy) {
-        obj.transform('t' + (tx[1] + dx) + ',' + (tx[2] + dy));
+        var tf = 't' + (tx[1] + dx) + ',' + (tx[2] + dy);
+        obj.transform(tf);
         select(obj);
+
+        canvas.trigger('drawing.change', {
+            element: obj,
+            type: 'move',
+            diff: tf,
+        });
     };
 
     this.objDragStop = function(e) {
@@ -59,4 +66,8 @@ Drawing.Select = function(paper) {
     }
     
     this.set = function(setting, value) {};
+
+    this.alterObject = function(object, tf) {
+        object.transform(tf);
+    };
 };

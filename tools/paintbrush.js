@@ -34,8 +34,8 @@ Drawing.Paintbrush = function(paper) {
         return paper.path(data);
     };
 
-    this.alterObject = function(object, data) {
-        object.attr('path', data);
+    this.alterObject = function(object, diff) {
+        object.attr('path', object.attr('path') + diff);
     };
 
     this.settings = function() {
@@ -75,6 +75,7 @@ Drawing.Paintbrush = function(paper) {
         canvas.trigger('drawing.change', { 
             element: path, 
             type: 'path',
+            diff: diff,
         });
     }
 };

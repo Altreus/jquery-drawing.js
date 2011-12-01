@@ -22,7 +22,6 @@ Drawing.Sprite = function(paper) {
             console.log(settings);
             img = paper.image(settings.image.value, 0, 0,
                 settings.width.value, settings.height.value);
-            canvas.trigger('drawing.begin', { element: img });
         }
 
         // if we haven't created it by now we couldn't.
@@ -40,6 +39,7 @@ Drawing.Sprite = function(paper) {
     };
 
     this.click = function(e) {
+        canvas.trigger('drawing.begin', { element: img });
         canvas.trigger('drawing.end', { element: img });
         img = null;
     };
